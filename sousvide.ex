@@ -1,5 +1,5 @@
 defmodule Sousvide do
-  @target_temperature = 51.667
+  @target_temperature 51.667
 
   def cook do
     power = 0
@@ -12,7 +12,7 @@ defmodule Sousvide do
   def step(power) do
     temperature = get_temperature()
     IO.puts("TEMPERATURE: #{temperature}")
-    if temperature < 51.667 - 1 do
+    if temperature < @target_temperature - 1 do
       power = power_should_be_on(power)
     else
       power = power_should_be_off(power)
