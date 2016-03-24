@@ -6,7 +6,7 @@ defmodule Sousvide do
     temperature = get_temperature()
     IO.puts "Initial Temperature: #{temperature}"
 
-    step(power, temperature + 1)
+    step(power, temperature)
   end
 
   def step(power, last_temperature) do
@@ -24,7 +24,11 @@ defmodule Sousvide do
 
   def estimate_time_left(current_temperature, last_temperature) do
     degrees_per_second = (current_temperature - last_temperature) / 10#s
-    seconds_per_degree = 1 / degrees_per_second
+    if degrees_per_second == 0  do
+      seconds_per_degree = 0
+    else
+      seconds_per_degree = 1 / degrees_per_second
+    end
     degrees_to_go = @target_temperature - current_temperature
     seconds_left = seconds_per_degree * degrees_to_go
     IO.puts "#{seconds_left / 60} MINUTES REMAINING (EST)"
