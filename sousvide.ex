@@ -6,7 +6,7 @@ defmodule Sousvide do
     temperature = get_temperature()
     IO.puts "Initial Temperature: #{temperature}"
 
-    step(power)
+    step(power, temperature)
   end
 
   def step(power, last_temperature) do
