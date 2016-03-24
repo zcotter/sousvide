@@ -9,8 +9,9 @@ defmodule Sousvide do
     step(power)
   end
 
-  def step(power) do
+  def step(power, last_temperature) do
     temperature = get_temperature()
+    estimate_time_left(temperature, last_temperature)
     IO.puts("TEMPERATURE: #{temperature}")
     if temperature < @target_temperature - 1 do
       power = power_should_be_on(power)
@@ -18,7 +19,15 @@ defmodule Sousvide do
       power = power_should_be_off(power)
     end
     :timer.sleep(10000)
-    step(power)
+    step(power, temperature)
+  end
+
+  def estimate_time_left(current_temperature, last_temperature) do
+    degrees_per_second = (current_temperature - last_temperature) / 10#s
+    seconds_per_degree = 1 / degrees_per_second
+    degrees_to_go = @target_temperature - current_temperature
+    seconds_left = seconds_per_degree * degrees_to_go
+    IO.puts "#{seconds_left / 60} MINUTES REMAINING (EST)"
   end
 
   def power_should_be_on(power) do
