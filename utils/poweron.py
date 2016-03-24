@@ -1,4 +1,5 @@
 import RPi.GPIO as io
+io.setwarnings(False)
 io.setmode(io.BCM)
 
 power_pin = 23
