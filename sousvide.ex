@@ -13,7 +13,7 @@ defmodule Sousvide do
     temperature = get_temperature()
     estimate_time_left(temperature, last_temperature)
     IO.puts("TEMPERATURE: #{temperature}")
-    power = if temperature < @target_temperature - 1 do
+    power = if temperature < @target_temperature - 0.25 do
       power_should_be_on(power)
     else
       power_should_be_off(power)
