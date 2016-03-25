@@ -12,7 +12,7 @@ defmodule Sousvide do
 
   def step(power, last_temperature, history, time_at_temp) do
     temperature = get_temperature()
-    estimate_time_left(temperature, last_temperature)
+    estimate_time_left(temperature, last_temperature, time_at_temp)
     IO.puts("TEMPERATURE: #{temperature}")
     power = if temperature < @target_temperature - 0.25 do
       power_should_be_on(power)
@@ -38,7 +38,7 @@ defmodule Sousvide do
     IO.binwrite file, inspect("#{temperature}\n")
   end
 
-  def estimate_time_left(current_temperature, last_temperature) do
+  def estimate_time_left(current_temperature, last_temperature, time_at_temp) do
     degrees_per_second = (current_temperature - last_temperature) / 10#s
     seconds_per_degree = if degrees_per_second == 0  do
       0
@@ -47,7 +47,13 @@ defmodule Sousvide do
     end
     degrees_to_go = @target_temperature - current_temperature
     seconds_left = seconds_per_degree * degrees_to_go
-    IO.puts "#{seconds_left / 60} MINUTES REMAINING (EST)"
+    minutes_left = Float.ceil(seconds_left / 60)
+    if current_temperature >= @target_temperature - 1 do
+      IO.puts "COOK TIME REMAINING #{@target_time - time_at_temp} MINUTES"
+    else
+      IO.puts "#{minutes_left} MINUTES TO TARGET TEMP"
+    end
+
   end
 
   def power_should_be_on(power) do
