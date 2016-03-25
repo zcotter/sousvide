@@ -35,7 +35,7 @@ defmodule Sousvide do
 
   def write_logs(temperature) do
     {:ok, file} = File.open "logs/history.log", [:append]
-    IO.binwrite file, inspect(temperature <> "\n")
+    IO.binwrite file, inspect("#{temperature}\n")
   end
 
   def estimate_time_left(current_temperature, last_temperature) do
