@@ -25,7 +25,7 @@ defmodule Sousvide do
       IO.puts "TIME AT TEMP: #{time_at_temp}"
     end
     history = history ++ [temperature]
-    write_logs(history)
+    write_logs(temperature)
     if time_at_temp < @target_time do
       step(power, temperature, history, time_at_temp)
     else
@@ -33,9 +33,9 @@ defmodule Sousvide do
     end
   end
 
-  def write_logs(history) do
-    {:ok, file} = File.open "logs/history.log", [:write]
-    IO.binwrite file, inspect(history)
+  def write_logs(temperature) do
+    {:ok, file} = File.open "logs/history.log", [:append]
+    IO.binwrite file, inspect(temperature <> "\n")
   end
 
   def estimate_time_left(current_temperature, last_temperature) do
