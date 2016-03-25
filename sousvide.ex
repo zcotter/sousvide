@@ -1,15 +1,16 @@
 defmodule Sousvide do
   @target_temperature 51.667
+  @target_time 60 * 60 * 4.0 # 4 hours
 
   def cook do
     power = 0
     temperature = get_temperature()
     IO.puts "Initial Temperature: #{temperature}"
 
-    step(power, temperature)
+    step(power, temperature, [], 0)
   end
 
-  def step(power, last_temperature) do
+  def step(power, last_temperature, history, time_at_temp) do
     temperature = get_temperature()
     estimate_time_left(temperature, last_temperature)
     IO.puts("TEMPERATURE: #{temperature}")
@@ -19,7 +20,22 @@ defmodule Sousvide do
       power_should_be_off(power)
     end
     :timer.sleep(10000)
-    step(power, temperature)
+    if temperature >= @target_temperature - 1 do
+      time_at_temp = time_at_temp + 10
+      IO.puts "TIME AT TEMP: #{time_at_temp}"
+    end
+    history = history ++ [temperature]
+    write_logs(history)
+    if time_at_temp < @target_time do
+      step(power, temperature, history, time_at_temp)
+    else
+      IO.puts "DONE!!!"
+    end
+  end
+
+  def write_logs(history) do
+    {:ok, file} = File.open "logs/history.log", [:write]
+    IO.binwrite file, inspect(history)
   end
 
   def estimate_time_left(current_temperature, last_temperature) do
