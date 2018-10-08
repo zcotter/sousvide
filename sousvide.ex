@@ -1,6 +1,6 @@
 defmodule Sousvide do
-  @target_temperature 51.667
-  @target_time 60 * 60 * 4.0 # 4 hours
+  @target_temperature 52
+  @target_time 60 * 60 * 8.0 # 8 hours
 
   def cook do
     power = 0
